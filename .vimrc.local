@@ -1,0 +1,83 @@
+"set relativenumber  " 开启相对行号
+call plug#begin('~/.vim/plugged')
+
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'skywind3000/gutentags_plus'
+Plug 'chrisbra/changesPlugin'
+Plug 'vim-scripts/taglist.vim'
+
+call plug#end()            
+
+" ---------taglist----------
+let Tlist_Ctags_Cmd='ctags'                 "     基于ctags
+"let Tlist_Auto_Open = 0                     "     默认打开Taglist
+let Tlist_Sort_Type = "name"                "     按照名称排序
+let Tlist_Show_One_File=1                   "     不同时显示多个文件的tag,只显示当前文件的
+let Tlist_Use_Right_Window = 0              "     在右侧显示窗口
+let Tlist_Compart_Format = 1                "     不显示空白行
+let Tlist_Exist_OnlyWindow = 1              "     如果只有一个buffer,kill窗口也kill掉buffer
+let Tlist_File_Fold_Auto_Close = 1          "     打开其他文件的时候自动关闭,只显示一个文件的tag
+let Tlist_Exit_OnlyWindow=1
+let Tlist_Auto_Update=1                     "     自动更新,包含新文件时候
+let Tlist_Enable_Fold_Column = 0            "     不要显示折叠树
+let Tlist_Use_Right_Window=1                "     右边显示 Left_Window 会左边显示
+let Tlist_GainFocus_On_ToggleOpen=1
+let Tlist_Use_Horiz_Window=1
+let tlist_php_settings = 'php;c:class;i:interfaces;d:constant;f:function'
+nnoremap <silent> <leader>g :TlistToggle<cr>
+inoremap <silent> <leader>g <esc> :TlistToggle<cr>
+
+
+" -------- vim-gutentags 函数跳转 --------
+"set cscopetag " 使用 cscope 作为 tags 命令
+"set cscopeprg='gtags-cscope' " 使用 gtags-cscope 代替 cscope
+"let $GTAGSLABEL = 'native-pygments'
+"let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
+" enable gtags module
+let g:gutentags_modules = ['ctags', 'gtags_cscope']
+
+" config project root markers.
+let g:gutentags_project_root = ['.root', '.git']
+
+" generate datebases in my cache directory, prevent gtags files polluting my project
+let g:gutentags_cache_dir = expand('~/.cache/tags')
+
+" 配置 ctags 的参数
+"let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+"let g:gutentags_ctags_extra_args += ['--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+vI']
+"let g:gutentags_ctags_extra_args += ['--c-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+vI']
+let g:gutentags_ctags_extra_args = ['--fields=+lS']
+if isdirectory("kernel/") && isdirectory("mm/")
+    let g:gutentags_file_list_command = 'find arch/arm/ mm/ kernel/ include/ init/ lib/'
+endif
+
+
+" change focus to quickfix window after search (optional).
+let g:gutentags_plus_switch = 1
+let g:gutentags_define_advanced_commands = 1
+let g:gutentags_plus_nomap = 1
+
+noremap <silent> <leader>vs :GscopeFind s <C-R><C-W><cr>
+noremap <silent> <leader>vg :GscopeFind g <C-R><C-W><cr>
+noremap <silent> <leader>vc :GscopeFind c <C-R><C-W><cr>
+noremap <silent> <leader>vt :GscopeFind t <C-R><C-W><cr>
+noremap <silent> <leader>ve :GscopeFind e <C-R><C-W><cr>
+noremap <silent> <leader>vf :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>
+noremap <silent> <leader>vi :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>
+noremap <silent> <leader>vd :GscopeFind d <C-R><C-W><cr>
+noremap <silent> <leader>va :GscopeFind a <C-R><C-W><cr>
+
+nmap <leader>gf :GscopeFind
+
+ "  -------- ChangesPlugin  文件显示修改痕迹 --------
+let g:changes_autocmd=1
+let g:changes_use_icons = 1
+let g:changes_linehi_diff = 0
+hi ChangesSignTextAdd ctermbg=green ctermfg=black guibg=green
+hi ChangesSignTextDel ctermbg=red  ctermfg=black guibg=red
+hi ChangesSignTextCh  ctermbg=yellow  ctermfg=black guibg=blue
+
+" YCM
+let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
+
+set scrolloff=5

@@ -1,0 +1,1 @@
+/home/yy/.vimplus/.vimrc
